@@ -45,12 +45,12 @@ API destinada ao controle dos clientes.
 
     - Required:
     
-       ` id=[bigint] - ID do cliente - Obrigatórios nos métodos GET, PUT e DELETE`
+       ` id=[bigint] - ID do cliente - Obrigatório nos métodos GET, PUT e DELETE`
 
             
 - Body Params:
 
-    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+    `Devem ser enviados em formato JSON e somente nos métodos POST e PUT.`
 
     **name**=[string] - Nome do cliente
 
@@ -85,12 +85,12 @@ API destinada ao controle e operações das contas.
 
     - Required:
     
-       ` id=[bigint] - ID da conta - Obrigatórios nos métodos GET, PUT e DELETE`
+       ` id=[bigint] - ID da conta - Obrigatório nos métodos GET, PUT e DELETE`
        
        
 - Body Params:
             
-    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+    `Devem ser enviados em formato JSON e somente nos métodos POST e PUT.`
         
     **customer_id**=[bigint] - ID do usuário
 
@@ -125,12 +125,12 @@ API destinada ao depósito em conta
 
 - URL Params:
 
-Não possui.
+`Não possui.`
 
 
 - Body Params:
 
-    `Devem ser passados em formato JSON`
+    `Devem ser enviados em formato JSON`
     
     **account_id**=[bigint] - Conta de destino da operação.
     
@@ -142,6 +142,19 @@ Não possui.
         "account_id" : 3,
         "value" : 550
     }
+    
+- Response:
+    
+    - Sucesso:
+    
+    **CODE:** 200
+    **CONTENT:** - Retorna uma mensagem de sucesso. Ex.:  "Operação realizada com sucesso"
+    
+    - Erro:
+    
+    **CODE:** 400
+    **CONTENT:** - Retorna uma mensagem com o motivo da falha da operação. Ex.:  "O valor precisa ser igual ou maior que um."
+    
     
 #### Withdraw
 
@@ -157,12 +170,12 @@ API destinada ao saque na conta
 
 - URL Params:
 
-Não possui.
+`Não possui.`
 
 
 - Body Params:
 
-    `Devem ser passados em formato JSON`
+    `Devem ser enviados em formato JSON`
     
     **account_id**=[bigint] - Conta de destino da operação.
     
@@ -174,3 +187,18 @@ Não possui.
         "account_id" : 3,
         "value" : 550
     }
+    
+- Response:
+    
+    - Sucesso:
+    
+    **CODE:** 200
+    **CONTENT:** - Retorna um array com os tipos e quantidade de notas selecionadas para operação. Ex.:  {"100": 1, "50": 1}
+    
+    - Erro:
+    
+    **CODE:** 400
+    **CONTENT:** - Retorna uma mensagem com o motivo da falha da operação. Ex.: "Saldo insuficiente."
+    
+    
+    
