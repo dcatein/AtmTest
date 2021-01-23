@@ -45,12 +45,12 @@ API destinada ao controle dos clientes.
 
     - Required:
     
-       ` id=[bigint] - ID do cliente - Obrigatórios nos métodos GET, PUT e DELETE`
+       ` id=[bigint] - ID do cliente - Obrigatório nos métodos GET, PUT e DELETE`
 
             
 - Body Params:
 
-    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+    `Devem ser enviados em formato JSON e somente nos métodos POST e PUT.`
 
     **name**=[string] - Nome do cliente
 
@@ -85,12 +85,12 @@ API destinada ao controle e operações das contas.
 
     - Required:
     
-       ` id=[bigint] - ID da conta - Obrigatórios nos métodos GET, PUT e DELETE`
+       ` id=[bigint] - ID da conta - Obrigatório nos métodos GET, PUT e DELETE`
        
        
 - Body Params:
             
-    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+    `Devem ser enviados em formato JSON e somente nos métodos POST e PUT.`
         
     **customer_id**=[bigint] - ID do usuário
 
@@ -125,12 +125,12 @@ API destinada ao depósito em conta
 
 - URL Params:
 
-Não possui.
+`Não possui.`
 
 
 - Body Params:
 
-    `Devem ser passados em formato JSON`
+    `Devem ser enviados em formato JSON`
     
     **account_id**=[bigint] - Conta de destino da operação.
     
@@ -170,12 +170,12 @@ API destinada ao saque na conta
 
 - URL Params:
 
-Não possui.
+`Não possui.`
 
 
 - Body Params:
 
-    `Devem ser passados em formato JSON`
+    `Devem ser enviados em formato JSON`
     
     **account_id**=[bigint] - Conta de destino da operação.
     
