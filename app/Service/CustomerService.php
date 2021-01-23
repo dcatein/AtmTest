@@ -10,7 +10,7 @@ class CustomerService {
      /**
      * @var CustomerRepository
      */
-    protected $customerRepository;
+    protected CustomerRepository $customerRepository;
 
     public function __construct(
         CustomerRepository $customerRepository

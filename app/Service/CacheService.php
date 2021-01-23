@@ -9,7 +9,7 @@ class CacheService {
     /**
      * @var Redis
      */
-    protected $cache;
+    protected Redis $cache;
 
     public function __construct(Redis $cache) {
         $this->cache = $cache;

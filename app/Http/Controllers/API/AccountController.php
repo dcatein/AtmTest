@@ -18,7 +18,7 @@ class AccountController extends Controller
     /**
      * @var AccountService
      */
-    protected $accountService;
+    protected AccountService $accountService;
 
     public function __construct(
         AccountService $accountService

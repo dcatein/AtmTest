@@ -15,17 +15,17 @@ class AccountService {
     /**
      * @var AccountRepository
      */
-    protected $accountRepository;
+    protected AccountRepository $accountRepository;
     
     /**
      * @var OperationService
      */
-    protected $operationService;
+    protected OperationService $operationService;
     
     /**
      * @var CacheService
      */
-    protected $cacheService;
+    protected CacheService $cacheService;
 
     const DEPOSIT_TRANSACTION = 1;
     const WITHDRAW_TRANSACTION = 2;

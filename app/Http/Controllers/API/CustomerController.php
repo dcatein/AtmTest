@@ -16,7 +16,7 @@ class CustomerController extends Controller
     /**
      * @var CustomerServices
      */
-    protected $customerService;
+    protected CustomerService $customerService;
 
     public function __construct(
         CustomerService $customerService
