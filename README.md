@@ -1,62 +1,176 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# ATM-Test
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Projeto de APIs que simulam operações básicas de um caixa eletrônico.
 
-## About Laravel
+## Instalação
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> Antes de prosseguir com a instalação certifique-se de possuir instalados em sua máquina ***composer***, ***docker*** e ***docker-compose***
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Execute o clone do projeto:
 
-## Learning Laravel
+> git clone https://github.com/dcatein/AtmTest.git
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+*Ou*
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> git clone git@github.com:dcatein/AtmTest.git
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Navegue até a pasta do projeto, e execute o seguinte comando para dar permissão de execução ao script de instalação:
 
-### Premium Partners
+> sudo chmod +x run.sh
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+Execute o script de instalação:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> ./run.sh
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Utilização 
 
-## Security Vulnerabilities
+### Customers
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+API destinada ao controle dos clientes.
 
-## License
+- URL
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+`/api/customers`
+
+- Methods
+
+` POST | GET | PUT | DELETE`
+ 
+   
+- URL Params:
+
+    - Required:
+    
+       ` id=[bigint] - ID do cliente - Obrigatórios nos métodos GET, PUT e DELETE`
+
+            
+- Body Params:
+
+    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+
+    **name**=[string] - Nome do cliente
+
+    **date_of_birth**=[date] - Data de nascimento do cliente
+
+    **cpf**=[integer] - CPF do cliente
+
+    - Exemplo:
+
+
+        {
+            "name": "Giovanna",
+            "date_of_birth": "1997-03-21",
+            "cpf": "17464716778"
+        }
+
+
+### Account
+
+API destinada ao controle e operações das contas.
+
+    
+- URL
+
+`/api/accounts`
+
+- Methods
+
+` POST | GET | PUT | DELETE`
+
+- URL Params:
+
+    - Required:
+    
+       ` id=[bigint] - ID da conta - Obrigatórios nos métodos GET, PUT e DELETE`
+       
+       
+- Body Params:
+            
+    `Devem ser passados em formato JSON e somente nos métodos POST e PUT.`
+        
+    **customer_id**=[bigint] - ID do usuário
+
+    **type**=[integer] - Tipo da conta. 0 - poupança; 1 - corrente.
+
+    **balance**=[integer] - Saldo inicial da conta.
+        
+    - Exemplo:
+        
+        {
+            "customer_id" : 24,
+            "type" : 0,
+            "balance" : 200
+        }
+        
+        
+### Operations
+
+APIs destinadas as operações de saque e depósito
+
+#### Deposit
+
+API destinada ao depósito em conta
+
+- URL
+
+`/api/accounts/deposit`
+
+- Methods
+
+` POST `
+
+- URL Params:
+
+Não possui.
+
+
+- Body Params:
+
+    `Devem ser passados em formato JSON`
+    
+    **account_id**=[bigint] - Conta de destino da operação.
+    
+    **value**=[integer] - Valor da operação
+    
+    - Exemplo:
+    
+    {
+        "account_id" : 3,
+        "value" : 550
+    }
+    
+#### Withdraw
+
+API destinada ao saque na conta
+
+- URL
+
+`/api/accounts/withdraw`
+
+- Methods
+
+` POST `
+
+- URL Params:
+
+Não possui.
+
+
+- Body Params:
+
+    `Devem ser passados em formato JSON`
+    
+    **account_id**=[bigint] - Conta de destino da operação.
+    
+    **value**=[integer] - Valor da operação
+    
+    - Exemplo:
+    
+    {
+        "account_id" : 3,
+        "value" : 550
+    }
