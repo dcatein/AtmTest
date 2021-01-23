@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\AccountTransactionRequest;
 use App\Http\Requests\AccountRequest;
-use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {

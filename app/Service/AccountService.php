@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Repository\AccountRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Redis;
 use App\Models\Account;
 use App\Service\OperationService;
 use App\Service\CacheService;
@@ -56,11 +55,12 @@ class AccountService {
                'code' => Response::HTTP_FOUND
            ];
         }else{
-            $account = $this->accountRepository->create($entity);
-            return [
-                'data' => $account,
-                'code' => Response::HTTP_CREATED
-            ];
+            throw new Exception("Conta não encontrada, verifique o customer_id.", Response::HTTP_BAD_REQUEST);
+            // $account = $this->accountRepository->create($entity);
+            // return [
+            //     'data' => $account,
+            //     'code' => Response::HTTP_CREATED
+            // ];
         }
     }
 
