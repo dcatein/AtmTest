@@ -143,6 +143,19 @@ Não possui.
         "value" : 550
     }
     
+- Response:
+    
+    - Sucesso:
+    
+    **CODE:** 200
+    **CONTENT:** - Retorna uma mensagem de sucesso. Ex.:  "Operação realizada com sucesso"
+    
+    - Erro:
+    
+    **CODE:** 400
+    **CONTENT:** - Retorna uma mensagem com o motivo da falha da operação. Ex.:  "O valor precisa ser igual ou maior que um."
+    
+    
 #### Withdraw
 
 API destinada ao saque na conta
@@ -174,3 +187,18 @@ Não possui.
         "account_id" : 3,
         "value" : 550
     }
+    
+- Response:
+    
+    - Sucesso:
+    
+    **CODE:** 200
+    **CONTENT:** - Retorna um array com os tipos e quantidade de notas selecionadas para operação. Ex.:  {"100": 1, "50": 1}
+    
+    - Erro:
+    
+    **CODE:** 400
+    **CONTENT:** - Retorna uma mensagem com o motivo da falha da operação. Ex.: "Saldo insuficiente."
+    
+    
+    
