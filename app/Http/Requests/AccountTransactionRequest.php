@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AccountTransactionRequest extends FormRequest
 {
+
+    private $accountFieldName = 'account_id';
+    private $valueFieldName = 'value';
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -40,6 +44,16 @@ class AccountTransactionRequest extends FormRequest
             'account_id.required' => 'O campo não pode ser nulo',
             'value.gte' => 'O valor precisa ser igual ou maior que um.',
         ];
+    }
+
+    public function getAccountId()
+    {
+        return $this->{$this->accountFieldName};
+    }
+    
+    public function getValue()
+    {
+        return $this->{$this->valueFieldName};
     }
 
     protected function failedValidation(Validator $validator) {

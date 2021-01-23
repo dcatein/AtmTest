@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomerRepository {
 
@@ -13,7 +14,7 @@ class CustomerRepository {
      * 
      * @return Customer
      */
-    public function create(Customer $data)
+    public function create(Customer $data) :Customer
     {
         $customer = Customer::create($data->getAttributes());
         
@@ -22,8 +23,10 @@ class CustomerRepository {
 
     /**
      * Retorna todos as entidades da tabela customers
+     * 
+     * @return LengthAwarePaginator
      */
-    public function findAll()
+    public function findAll() :LengthAwarePaginator
     {
         $model = new Customer();
         return DB::table($model->getTable())->paginate(20);
@@ -35,7 +38,7 @@ class CustomerRepository {
      * 
      * @return Customer
      */
-    public function find(Int $id)
+    public function find(Int $id) :Customer
     {
         return Customer::find($id);
     }
@@ -46,7 +49,7 @@ class CustomerRepository {
      * @param Int $id
      * @return Customer
      */
-    public function update(Customer $data, Int $id)
+    public function update(Customer $data, Int $id) :Customer
     {
         return Customer::find($id)->update($data->getAttributes());
     }
@@ -56,8 +59,8 @@ class CustomerRepository {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id)
+    public function delete(Int $id) :void
     {
-        return Customer::destroy($id);
+        Customer::destroy($id);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class AccountRepository {
     
@@ -13,15 +14,17 @@ class AccountRepository {
      * 
      * @return Account
      */
-    public function create(Account $data)
+    public function create(Account $data) :Account
     {
         return Account::create($data->getAttributes());
     }
 
     /**
      * Retorna todos as entidades da tabela accounts
+     * 
+     * @return LengthAwarePaginator
      */
-    public function findAll()
+    public function findAll() :LengthAwarePaginator
     {
         $model = new Account();
         return DB::table($model->getTable())->paginate(20);
@@ -33,7 +36,7 @@ class AccountRepository {
      * 
      * @return Account
      */
-    public function find(Int $id)
+    public function find(Int $id) :Account
     {
         return Account::find($id);
     }
@@ -45,7 +48,7 @@ class AccountRepository {
      * 
      * @return Account
      */
-    public function findCustomerAccount(Int $customer_id, Int $account_type)
+    public function findCustomerAccount(Int $customer_id, Int $account_type) :Account
     {
         return Account::where('customer_id', $customer_id)->where('type', $account_type)->first();
     }
@@ -56,9 +59,12 @@ class AccountRepository {
      * @param Int $id
      * @return Account
      */
-    public function update(Account $data, Int $id)
+    public function update(Account $data, Int $id) :Account
     {
-        return Account::where('id', $id)->update($data->getAttributes());
+        $account = Account::find($id)->fill($data->getAttributes());
+        $account->save();
+
+        return $account; 
     }
 
     /**
@@ -66,9 +72,9 @@ class AccountRepository {
      * @param  int  $id
      * 
      */
-    public function delete($id)
+    public function delete($id) :void
     {
-        return Account::destroy($id);
+        Account::destroy($id);
     }
 
 }

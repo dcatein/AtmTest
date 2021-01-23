@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Account;
 use App\Service\OperationService;
 use App\Service\CacheService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Exceptions\TransactionException;
 
 class AccountService {
     
@@ -56,15 +58,14 @@ class AccountService {
            ];
         }else{
             throw new Exception("Conta não encontrada, verifique o customer_id.", Response::HTTP_BAD_REQUEST);
-            // $account = $this->accountRepository->create($entity);
-            // return [
-            //     'data' => $account,
-            //     'code' => Response::HTTP_CREATED
-            // ];
         }
     }
 
-    public function findAll()
+    /**
+     * 
+     * @return LengthAwarePaginator
+     */
+    public function findAll() :LengthAwarePaginator
     {
         return $this->accountRepository->findAll();
     }
@@ -75,7 +76,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function find(Int $id)
+    public function find(Int $id) :Account
     {
         return $this->accountRepository->find($id);
     }
@@ -87,7 +88,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function findCustomerAccount(Int $customer_id, Int $account_type)
+    public function findCustomerAccount(Int $customer_id, Int $account_type) :Account
     {
         return $this->accountRepository->findCustomerAccount($customer_id, $account_type);
     }
@@ -98,7 +99,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function update(Account $data, $id)
+    public function update(Account $data, $id) :Account
     {
         return $this->accountRepository->update($data, $id);
     }
@@ -108,9 +109,9 @@ class AccountService {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id)
+    public function delete(Int $id) :void
     {
-        return $this->accountRepository->delete($id);
+        $this->accountRepository->delete($id);
     }
 
     /**
@@ -119,7 +120,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function fillEntity(Array $data)
+    public function fillEntity(Array $data) :Account
     {
         return new Account($data);
     }
@@ -132,7 +133,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function deposit(Account $account, Int $value)
+    public function deposit(Account $account, Int $value) :void
     {
         try {
             $redisKey = self::DEPOSIT_TRANSACTION . $account->id;
@@ -140,15 +141,20 @@ class AccountService {
             $validateCache = $this->cacheService->validateCache($redisKey);
 
             if(!$validateCache){
-                throw new Exception('Já existe uma transação deste tipo em andamento.', Response::HTTP_BAD_REQUEST);
+                throw new TransactionException();
             }
 
             $account->balance = $this->operationService->depositValue($account, $value);
 
             $this->update($account, $account->id);
 
-        } finally {
             $this->cacheService->clearCache($redisKey);
+
+        }catch (TransactionException $e){
+            throw $e;
+        }catch (Exception $e){
+            $this->cacheService->clearCache($redisKey);
+            throw $e;
         }
     }
 
@@ -158,9 +164,9 @@ class AccountService {
      * @param Account $account
      * @param int $value
      * 
-     * @return Account
+     * @return Array
      */
-    public function withdraw(Account $account, Int $value)
+    public function withdraw(Account $account, Int $value) :Array
     {
         try {
             $redisKey = self::WITHDRAW_TRANSACTION . $account->id;
@@ -168,7 +174,7 @@ class AccountService {
             $validateCache = $this->cacheService->validateCache($redisKey);
 
             if(!$validateCache){
-                throw new Exception('Já existe uma transação deste tipo em andamento.', Response::HTTP_BAD_REQUEST);
+                throw new TransactionException();
             }
     
             if($account->balance < $value){
@@ -184,11 +190,16 @@ class AccountService {
             $account->balance = $this->operationService->withdrawValue($account, $value);
     
             $this->update($account, $account->id);
-            
-            return $withdraw;
 
-        } finally {
             $this->cacheService->clearCache($redisKey);
+
+            return $withdraw;
+        
+        }catch (TransactionException $e){
+            throw $e;
+        }catch (Exception $e){
+            $this->cacheService->clearCache($redisKey);
+            throw $e;
         }
     }
 

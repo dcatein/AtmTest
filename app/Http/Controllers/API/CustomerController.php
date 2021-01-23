@@ -8,7 +8,9 @@ use Illuminate\Http\JsonResponse;
 use App\Service\CustomerService;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CustomerRequest;
-
+use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Exception;
+use App\Models\Customer;
 
 class CustomerController extends Controller
 {
@@ -27,9 +29,9 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator;
      */
-    public function index()
+    public function index() :LengthAwarePaginator
     {
         return $this->customerService->findAll();
     }
@@ -40,7 +42,7 @@ class CustomerController extends Controller
      * @param  \App\Http\Requests\CustomerRequest $request
      * @return JsonResponse
      */
-    public function store(CustomerRequest $request)
+    public function store(CustomerRequest $request) :JsonResponse
     {
         try {
             $customer = $this->customerService->fillEntity($request->all());
@@ -48,7 +50,7 @@ class CustomerController extends Controller
             $return = $this->customerService->create($customer);
     
             return new JsonResponse($return, Response::HTTP_CREATED);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
         }
     }
@@ -57,9 +59,9 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Customer
      */
-    public function show($id)
+    public function show($id) :Customer
     {
         return $this->customerService->find($id);
     }
@@ -69,9 +71,9 @@ class CustomerController extends Controller
      *
      * @param  \App\Http\Requests\CustomerRequest $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function update(CustomerRequest $request, $id)
+    public function update(CustomerRequest $request, $id) :JsonResponse
     {
         try {
             $customer = $this->customerService->fillEntity($request->all());
@@ -79,7 +81,7 @@ class CustomerController extends Controller
             $this->customerService->update($customer, $id);
     
             return new JsonResponse($customer, Response::HTTP_OK);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
         }
     }
@@ -88,15 +90,15 @@ class CustomerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($id) :JsonResponse
     {
         try {
             $this->customerService->delete($id);
     
             return new JsonResponse("Recurso deletado com sucesso", Response::HTTP_OK);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
         }
     }

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Repository\CustomerRepository;
 use App\Models\Customer;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomerService {
 
@@ -24,14 +25,17 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function create(Customer $entity)
+    public function create(Customer $entity) :Customer
     {   
         $customer = $this->customerRepository->create($entity);
         return $customer;
     }
 
-    
-    public function findAll()
+    /**
+     * 
+     * @return LengthAwarePaginator
+     */
+    public function findAll() :LengthAwarePaginator
     {
         return $this->customerRepository->findAll();
     }
@@ -42,7 +46,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function find(Int $id)
+    public function find(Int $id) :Customer
     {
         return $this->customerRepository->find($id);
     }
@@ -53,7 +57,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function update(Customer $data, $id)
+    public function update(Customer $data, $id) :Customer
     {
         return $this->customerRepository->update($data, $id);
     }
@@ -63,7 +67,7 @@ class CustomerService {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id)
+    public function delete(Int $id) :void
     {
        $this->customerRepository->delete($id);
     }
@@ -74,7 +78,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function fillEntity(Array $data)
+    public function fillEntity(Array $data) :Customer
     {
         return new Customer($data);
     }
