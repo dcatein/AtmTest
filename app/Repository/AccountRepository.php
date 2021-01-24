@@ -16,7 +16,7 @@ class AccountRepository {
      */
     public function create(Account $data) :Account
     {
-        return Account::create($data->getAttributes());
+        return Account::firstOrcreate($data->getAttributes());
     }
 
     /**

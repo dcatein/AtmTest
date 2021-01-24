@@ -50,15 +50,7 @@ class AccountService {
      */
     public function create(Account $entity)
     {
-        $account = $this->findCustomerAccount($entity->customer_id, $entity->type);
-        if($account){
-           return [
-               'data' => $account,
-               'code' => Response::HTTP_FOUND
-           ];
-        }else{
-            throw new Exception("Conta não encontrada, verifique o customer_id.", Response::HTTP_BAD_REQUEST);
-        }
+        return $this->accountRepository->create($entity);
     }
 
     /**

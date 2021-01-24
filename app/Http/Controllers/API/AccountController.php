@@ -52,7 +52,7 @@ class AccountController extends Controller
 
             $return = $this->accountService->create($account);
 
-            return new JsonResponse($return['data'], $return['code']);
+            return new JsonResponse($return, Response::HTTP_CREATED);
         } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
         }
