@@ -6,10 +6,11 @@ use App\Repository\AccountRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Account;
-use App\Service\OperationService;
-use App\Service\CacheService;
+use App\Service\CustomerService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Exceptions\TransactionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class AccountService {
     
@@ -19,27 +20,16 @@ class AccountService {
     protected AccountRepository $accountRepository;
     
     /**
-     * @var OperationService
+     * @var CustomerService
      */
-    protected OperationService $operationService;
-    
-    /**
-     * @var CacheService
-     */
-    protected CacheService $cacheService;
-
-    const DEPOSIT_TRANSACTION = 1;
-    const WITHDRAW_TRANSACTION = 2;
+    protected CustomerService $customerService;
 
     public function __construct(
         AccountRepository $accountRepository,
-        OperationService $operationService,
-        CacheService $cacheService
+        CustomerService $customerService
     ){
         $this->accountRepository = $accountRepository;
-        $this->operationService = $operationService;
-        $this->cacheService = $cacheService;
-        $this->bankNotes = [100, 20, 50];
+        $this->customerService = $customerService;
     }
 
     /**
@@ -50,7 +40,25 @@ class AccountService {
      */
     public function create(Account $entity)
     {
-        return $this->accountRepository->create($entity);
+        try {
+            DB::beginTransaction();
+
+            $customer = $this->customerService->find($entity->customer_id);
+
+            if(!$customer){
+                throw new ModelNotFoundException("Customer_id não encontrado, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+            }
+
+            DB::commit();
+
+            return $this->accountRepository->create($entity);
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            throw $e;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -68,7 +76,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function find(Int $id) :Account
+    public function find(Int $id) :Account|null
     {
         return $this->accountRepository->find($id);
     }
@@ -93,7 +101,22 @@ class AccountService {
      */
     public function update(Account $data, $id) :Account
     {
-        return $this->accountRepository->update($data, $id);
+        try {
+            DB::beginTransaction();
+            $account = $this->accountRepository->find($id);
+
+            if(!$account){
+                throw new ModelNotFoundException("Conta não encontrada, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+            }
+
+            $account = $this->accountRepository->update($data, $id);
+            DB::commit();
+
+            return $account;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -103,7 +126,14 @@ class AccountService {
      */
     public function delete(Int $id) :void
     {
-        $this->accountRepository->delete($id);
+        try {
+            DB::beginTransaction();
+            $this->accountRepository->delete($id);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -116,85 +146,5 @@ class AccountService {
     {
         return new Account($data);
     }
-
-    /**
-     * Realiza um depósito na conta
-     * 
-     * @param Account $account
-     * @param int $value
-     * 
-     * @return Account
-     */
-    public function deposit(Account $account, Int $value) :void
-    {
-        try {
-            $redisKey = self::DEPOSIT_TRANSACTION . $account->id;
-
-            $validateCache = $this->cacheService->validateCache($redisKey);
-
-            if(!$validateCache){
-                throw new TransactionException();
-            }
-
-            $account->balance = $this->operationService->depositValue($account, $value);
-
-            $this->update($account, $account->id);
-
-            $this->cacheService->clearCache($redisKey);
-
-        }catch (TransactionException $e){
-            throw $e;
-        }catch (Exception $e){
-            $this->cacheService->clearCache($redisKey);
-            throw $e;
-        }
-    }
-
-    /**
-     * Realiza um saque na conta
-     * 
-     * @param Account $account
-     * @param int $value
-     * 
-     * @return Array
-     */
-    public function withdraw(Account $account, Int $value) :Array
-    {
-        try {
-            $redisKey = self::WITHDRAW_TRANSACTION . $account->id;
-    
-            $validateCache = $this->cacheService->validateCache($redisKey);
-
-            if(!$validateCache){
-                throw new TransactionException();
-            }
-    
-            if($account->balance < $value){
-                throw new Exception("Saldo insuficiente.", Response::HTTP_BAD_REQUEST);
-            }
-    
-            $withdraw = $this->operationService->getBankNotes($value);
-            
-            if(!$withdraw){
-                throw new Exception("Valor solicitado inválido. As notas disponíveis são: ". implode(",", $this->bankNotes), Response::HTTP_BAD_REQUEST);
-            }
-    
-            $account->balance = $this->operationService->withdrawValue($account, $value);
-    
-            $this->update($account, $account->id);
-
-            $this->cacheService->clearCache($redisKey);
-
-            return $withdraw;
-        
-        }catch (TransactionException $e){
-            throw $e;
-        }catch (Exception $e){
-            $this->cacheService->clearCache($redisKey);
-            throw $e;
-        }
-    }
-
-
 
 }

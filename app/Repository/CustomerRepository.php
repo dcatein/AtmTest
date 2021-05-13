@@ -38,7 +38,7 @@ class CustomerRepository {
      * 
      * @return Customer
      */
-    public function find(Int $id) :Customer
+    public function find(Int $id) :Customer|null
     {
         return Customer::find($id);
     }
@@ -51,7 +51,8 @@ class CustomerRepository {
      */
     public function update(Customer $data, Int $id) :Customer
     {
-        return Customer::find($id)->update($data->getAttributes());
+        Customer::find($id)->update($data->getAttributes());
+        return $data; 
     }
 
     /**

@@ -36,7 +36,7 @@ class AccountRepository {
      * 
      * @return Account
      */
-    public function find(Int $id) :Account
+    public function find(Int $id) :Account|null
     {
         return Account::find($id);
     }

@@ -14,6 +14,7 @@ use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Exception;
 use App\Models\Account;
 use App\Exceptions\TransactionException;
+use App\Exceptions\NotFoundException;
 
 class AccountController extends Controller
 {
@@ -43,18 +44,21 @@ class AccountController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\AccountRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(AccountRequest $request) :JsonResponse
     {
         try {
             $account = $this->accountService->fillEntity($request->all());
-
+            
             $return = $this->accountService->create($account);
 
             return new JsonResponse($return, Response::HTTP_CREATED);
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
+
+        } catch (Exception $e) {
+            return new JsonResponse("Internal Error.", $e->getCode());
         }
     }
 
@@ -64,9 +68,22 @@ class AccountController extends Controller
      * @param int $id
      * @return Account
      */
-    public function show($id) :Account
+    public function show($id) :JsonResponse
     {
-        return $this->accountService->find($id);
+        try {
+            $account = $this->accountService->find($id);
+
+            if(!$account){
+                throw new ModelNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
+            }
+
+            return new JsonResponse($account, Response::HTTP_FOUND);
+
+        } catch(ModelNotFoundException $e){
+            return new JsonResponse($e->getMessage(), $e->getCode());
+        } catch (Exception $e) {
+            return new JsonResponse($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
@@ -74,7 +91,7 @@ class AccountController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(AccountRequest $request, $id) :JsonResponse
     {
@@ -93,67 +110,22 @@ class AccountController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id) :JsonResponse
     {
-        $this->accountService->delete($id);
-
-        return new JsonResponse("Recurso deletado com sucesso", Response::HTTP_OK);
-    }
-
-     /**
-     *
-     * @param  \App\Http\Requests\AccountTransactionRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function deposit(AccountTransactionRequest $request) :JsonResponse
-    {
         try {
-
-            $account = $this->accountService->find($request->getAccountId());
-            
-            if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
-            }
-
-            $this->accountService->deposit($account, $request->getValue());
-
-            return new JsonResponse("Operação realizada com sucesso", Response::HTTP_OK);
-
-        } catch(ModelNotFoundException $e){
-            return new JsonResponse($e->getMessage(), $e->getCode());
-        } catch(TransactionException $e){
-            return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
-        } catch (Exception $e) {
-            return new JsonResponse($e->getMessage(), $e->getCode());
-        }
-        
-    }
-
-     /**
-     *
-     * @param  \App\Http\Requests\AccountTransactionRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function withdraw(AccountTransactionRequest $request) :JsonResponse
-    {
-        try {
-
-            $account = $this->accountService->find($request->getAccountId());
+            $account = $this->accountService->find($id);
 
             if(!$account){
                 throw new ModelNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
             }
 
-            $response = $this->accountService->withdraw($account, $request->getValue());
+            $this->accountService->delete($id);
 
-            return new JsonResponse($response, Response::HTTP_OK);
-            
+            return new JsonResponse("Recurso deletado com sucesso", Response::HTTP_OK);
         } catch(ModelNotFoundException $e){
             return new JsonResponse($e->getMessage(), $e->getCode());
-        }catch(TransactionException $e){
-            return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
         }

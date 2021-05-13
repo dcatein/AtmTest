@@ -46,7 +46,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function find(Int $id) :Customer
+    public function find(Int $id) :Customer|null
     {
         return $this->customerRepository->find($id);
     }

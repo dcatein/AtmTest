@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\AccountController;
+use App\Http\Controllers\API\OperationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::group(['prefix' => '/accounts'], function(){
     Route::get('/{id}', [AccountController::class, 'show'])->name('account.show');
     Route::put('/{id}', [AccountController::class, 'update'])->name('account.update');
     Route::delete('/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
-    Route::post('/deposit', [AccountController::class, 'deposit'])->name('account.deposit');
-    Route::post('/withdraw', [AccountController::class, 'withdraw'])->name('account.withdraw');
+});
+
+Route::group(['prefix' => '/operation'], function(){
+    Route::post('/deposit', [OperationsController::class, 'deposit'])->name('operation.deposit');
+    Route::post('/withdraw', [OperationsController::class, 'withdraw'])->name('operation.withdraw');
 });
