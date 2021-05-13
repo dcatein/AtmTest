@@ -1,0 +1,9 @@
+{
+    "php.executablePath": "/usr/bin/php",
+    "php.validate.executablePath": "/usr/bin/php",
+    "php-cs-fixer.autoFixBySemicolon": true,
+    "php-cs-fixer.exclude": [
+    
+    ],
+    "php-cs-fixer.rules": ""
+}

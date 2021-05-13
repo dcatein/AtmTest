@@ -11,7 +11,7 @@ class CustomerService {
      /**
      * @var CustomerRepository
      */
-    protected CustomerRepository $customerRepository;
+    protected $customerRepository;
 
     public function __construct(
         CustomerRepository $customerRepository
@@ -46,7 +46,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function find(Int $id) :Customer|null
+    public function find(Int $id) :?Customer
     {
         return $this->customerRepository->find($id);
     }

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Account;
 use App\Service\CustomerService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Exceptions\TransactionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
@@ -17,12 +16,12 @@ class AccountService {
     /**
      * @var AccountRepository
      */
-    protected AccountRepository $accountRepository;
+    protected $accountRepository;
     
     /**
      * @var CustomerService
      */
-    protected CustomerService $customerService;
+    protected $customerService;
 
     public function __construct(
         AccountRepository $accountRepository,
@@ -76,7 +75,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function find(Int $id) :Account|null
+    public function find(Int $id) :?Account
     {
         return $this->accountRepository->find($id);
     }

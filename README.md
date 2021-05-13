@@ -117,7 +117,7 @@ API destinada ao depósito em conta
 
 - URL
 
-`/api/accounts/deposit`
+`/api/operation/deposit`
 
 - Methods
 
@@ -162,7 +162,7 @@ API destinada ao saque na conta
 
 - URL
 
-`/api/accounts/withdraw`
+`/api/operation/withdraw`
 
 - Methods
 

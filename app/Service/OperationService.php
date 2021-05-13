@@ -2,13 +2,12 @@
 
 namespace App\Service;
 
-use Illuminate\Support\Facades\Redis;
 use App\Models\Account;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\OperationService;
 use App\Service\CacheService;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\TransactionException;
 
 class OperationService {
 
@@ -18,12 +17,12 @@ class OperationService {
     /**
      * @var CacheService
      */
-    protected CacheService $cacheService;
+    protected $cacheService;
 
     /**
      * @var AccountService
      */
-    protected AccountService $accountService;
+    protected $accountService;
 
     public function __construct(
         CacheService $cacheService,

@@ -34,9 +34,9 @@ class AccountRepository {
      * Busca a account através do ID
      * @param int $id
      * 
-     * @return Account
+     * @return Account|null
      */
-    public function find(Int $id) :Account|null
+    public function find(Int $id) :?Account
     {
         return Account::find($id);
     }

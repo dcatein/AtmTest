@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Service\CustomerService;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ class CustomerController extends Controller
     /**
      * @var CustomerServices
      */
-    protected CustomerService $customerService;
+    protected $customerService;
 
     public function __construct(
         CustomerService $customerService

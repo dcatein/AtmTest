@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
 use App\Service\OperationService;
 use App\Service\AccountService;
 use App\Http\Controllers\Controller;
@@ -17,12 +16,12 @@ class OperationsController extends Controller
     /**
      * @var OperationService
      */
-    protected OperationService $operationService;
+    protected $operationService;
 
     /**
      * @var AccountService
      */
-    protected AccountService $accountService;
+    protected $accountService;
 
     public function __construct(
         OperationService $operationService,

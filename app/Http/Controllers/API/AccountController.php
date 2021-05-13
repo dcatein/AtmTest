@@ -3,26 +3,23 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Service\AccountService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Requests\AccountTransactionRequest;
 use App\Http\Requests\AccountRequest;
 use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Exception;
 use App\Models\Account;
-use App\Exceptions\TransactionException;
-use App\Exceptions\NotFoundException;
 
 class AccountController extends Controller
 {
 
     /**
      * @var AccountService
+     * 
      */
-    protected AccountService $accountService;
+    private $accountService;
 
     public function __construct(
         AccountService $accountService

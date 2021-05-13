@@ -38,7 +38,7 @@ class CustomerRepository {
      * 
      * @return Customer
      */
-    public function find(Int $id) :Customer|null
+    public function find(Int $id) :?Customer
     {
         return Customer::find($id);
     }
