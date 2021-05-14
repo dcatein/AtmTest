@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Exception;
 use App\Http\Requests\AccountTransactionRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Exceptions\TransactionException;
 use App\Exceptions\AccountNotFoundException;
 
