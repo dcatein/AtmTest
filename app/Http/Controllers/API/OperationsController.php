@@ -10,6 +10,7 @@ use App\Http\Requests\AccountTransactionRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Exceptions\TransactionException;
+use App\Exceptions\AccountNotFoundException;
 
 class OperationsController extends Controller
 {
@@ -42,14 +43,14 @@ class OperationsController extends Controller
             $account = $this->accountService->find($request->getAccountId());
 
             if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada", JsonResponse::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException();
             }
 
             $this->operationService->deposit($account, $request->getValue());
 
             return new JsonResponse("Operação realizada com sucesso", JsonResponse::HTTP_OK);
 
-        } catch(ModelNotFoundException $e){
+        } catch(AccountNotFoundException $e){
             return new JsonResponse($e->getMessage(), $e->getCode());
         } catch(TransactionException $e){
             return new JsonResponse($e->getMessage(), JsonResponse::HTTP_BAD_REQUEST);
@@ -70,14 +71,14 @@ class OperationsController extends Controller
             $account = $this->accountService->find($request->getAccountId());
 
             if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada", JsonResponse::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException();
             }
 
             $response = $this->operationService->withdraw($account, $request->getValue());
 
             return new JsonResponse($response, JsonResponse::HTTP_OK);
             
-        } catch(ModelNotFoundException $e){
+        } catch(AccountNotFoundException $e){
             return new JsonResponse($e->getMessage(), $e->getCode());
         }catch(TransactionException $e){
             return new JsonResponse($e->getMessage(), JsonResponse::HTTP_BAD_REQUEST);
