@@ -16,14 +16,13 @@ Execute o clone do projeto:
 > git clone git@github.com:dcatein/AtmTest.git
 
 
-Navegue até a pasta do projeto, e execute o seguinte comando para dar permissão de execução ao script de instalação:
+Navegue até a pasta do projeto, e execute os seguintes comandos para iniciar o projeto:
 
-> sudo chmod +x run.sh
+> make install
 
+> make env
 
-Execute o script de instalação:
-
-> ./run.sh
+> make up
 
 
 ## Utilização 
