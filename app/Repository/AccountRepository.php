@@ -34,7 +34,7 @@ class AccountRepository {
      * 
      * @return Account|null
      */
-    public function find(Int $id) :?Account
+    public function find(int $id) :?Account
     {
         return Account::find($id);
     }
@@ -46,7 +46,7 @@ class AccountRepository {
      * 
      * @return Account
      */
-    public function findCustomerAccount(Int $customer_id, Int $account_type) :Account
+    public function findCustomerAccount(int $customer_id, int $account_type) :Account
     {
         return Account::where('customer_id', $customer_id)->where('type', $account_type)->first();
     }
@@ -54,7 +54,7 @@ class AccountRepository {
     /**
      * Atualiza a conta na tabela accounts
      * @param Account $data
-     * @param Int $id
+     * @param int $id
      * @return Account
      */
     public function update(Account $data, Int $id) :Account
@@ -70,7 +70,7 @@ class AccountRepository {
      * @param  int  $id
      * 
      */
-    public function delete($id) :void
+    public function delete(int $id) :void
     {
         Account::destroy($id);
     }

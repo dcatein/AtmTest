@@ -36,7 +36,7 @@ class CustomerRepository {
      * 
      * @return Customer
      */
-    public function find(Int $id) :?Customer
+    public function find(int $id) :?Customer
     {
         return Customer::find($id);
     }
@@ -44,10 +44,10 @@ class CustomerRepository {
     /**
      * Atualiza o usuário na tabela customers
      * @param Customer $data
-     * @param Int $id
+     * @param int $id
      * @return Customer
      */
-    public function update(Customer $data, Int $id) :Customer
+    public function update(Customer $data, int $id) :Customer
     {
         Customer::find($id)->update($data->getAttributes());
         return $data; 
@@ -58,7 +58,7 @@ class CustomerRepository {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id) :void
+    public function delete(int $id) :void
     {
         Customer::destroy($id);
     }
