@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Models\Account;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class AccountRepository {
@@ -26,8 +25,7 @@ class AccountRepository {
      */
     public function findAll() :LengthAwarePaginator
     {
-        $model = new Account();
-        return DB::table($model->getTable())->paginate(20);
+        return Account::paginate(20);
     }
 
     /**

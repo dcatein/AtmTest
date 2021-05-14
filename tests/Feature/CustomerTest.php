@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Customer;
 use Faker\Factory;
@@ -75,6 +74,8 @@ class CustomerTest extends TestCase
 
         $this->delete(route('customers.destroy', $customer->id))
             ->assertStatus(200);
+
+        $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
     }
 
     public function test_customer_create_cpf_error()

@@ -72,7 +72,7 @@ class AccountController extends Controller
             $account = $this->accountService->find($id);
 
             if(!$account){
-                throw new AccountNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException();
             }
 
             return new JsonResponse($account, Response::HTTP_OK);
@@ -116,7 +116,7 @@ class AccountController extends Controller
             $account = $this->accountService->find($id);
 
             if(!$account){
-                throw new AccountNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException();
             }
 
             $this->accountService->delete($id);

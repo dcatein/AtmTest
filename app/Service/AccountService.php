@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Repository\AccountRepository;
 use Exception;
-use Symfony\Component\HttpFoundation\Response;
 use App\Models\Account;
 use App\Service\CustomerService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -46,7 +45,7 @@ class AccountService {
             $customer = $this->customerService->find($entity->customer_id);
 
             if(!$customer){
-                throw new CostumerNotFoundException("Customer_id não encontrado, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+                throw new CostumerNotFoundException();
             }
 
             DB::commit();
@@ -76,7 +75,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function find(Int $id) :?Account
+    public function find(int $id) :?Account
     {
         return $this->accountRepository->find($id);
     }
@@ -88,7 +87,7 @@ class AccountService {
      * 
      * @return Account
      */
-    public function findCustomerAccount(Int $customer_id, Int $account_type) :Account
+    public function findCustomerAccount(int $customer_id, int $account_type) :Account
     {
         return $this->accountRepository->findCustomerAccount($customer_id, $account_type);
     }
@@ -96,17 +95,18 @@ class AccountService {
     /**
      * Atualiza a conta na tabela accounts
      * @param Account $data
+     * @param int $id 
      * 
      * @return Account
      */
-    public function update(Account $data, $id) :Account
+    public function update(Account $data, int $id) :Account
     {
         try {
             DB::beginTransaction();
             $account = $this->accountRepository->find($id);
 
             if(!$account){
-                throw new AccountNotFoundException("Conta não encontrada, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException();
             }
 
             $account = $this->accountRepository->update($data, $id);
@@ -127,7 +127,7 @@ class AccountService {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id) :void
+    public function delete(int $id) :void
     {
         try {
             DB::beginTransaction();

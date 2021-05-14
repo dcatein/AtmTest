@@ -31,9 +31,7 @@ class CustomerService {
     {
         try {
             DB::beginTransaction();
-
             $customer = $this->customerRepository->create($entity);
-
             DB::commit();
             return $customer;
         } catch (Exception $e) {
@@ -58,7 +56,7 @@ class CustomerService {
      * 
      * @return Customer
      */
-    public function find(Int $id) :?Customer
+    public function find(int $id) :?Customer
     {
         return $this->customerRepository->find($id);
     }
@@ -66,10 +64,11 @@ class CustomerService {
     /**
      * Atualiza o usuário na tabela customers
      * @param  Customer  $data
+     * @param int $id 
      * 
      * @return Customer
      */
-    public function update(Customer $data, $id) :Customer
+    public function update(Customer $data, int $id) :Customer
     {
         try {
             DB::beginTransaction();
@@ -87,11 +86,12 @@ class CustomerService {
      * @param  int  $id
      * 
      */
-    public function delete(Int $id) :void
+    public function delete(int $id) :void
     {
         try {
             DB::beginTransaction();
             $this->customerRepository->delete($id);
+            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
