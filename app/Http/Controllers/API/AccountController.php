@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Service\AccountService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\AccountRequest;
 use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Exception;
 use App\Models\Account;
+use App\Exceptions\AccountNotFoundException;
+use App\Exceptions\CostumerNotFoundException;
 
 class AccountController extends Controller
 {
@@ -51,7 +52,7 @@ class AccountController extends Controller
             $return = $this->accountService->create($account);
 
             return new JsonResponse($return, Response::HTTP_CREATED);
-        } catch (ModelNotFoundException $e) {
+        } catch (CostumerNotFoundException $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
 
         } catch (Exception $e) {
@@ -65,18 +66,18 @@ class AccountController extends Controller
      * @param int $id
      * @return Account
      */
-    public function show($id) :JsonResponse
+    public function show(int $id) :JsonResponse
     {
         try {
             $account = $this->accountService->find($id);
 
             if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
             }
 
-            return new JsonResponse($account, Response::HTTP_FOUND);
+            return new JsonResponse($account, Response::HTTP_OK);
 
-        } catch(ModelNotFoundException $e){
+        } catch(AccountNotFoundException $e){
             return new JsonResponse($e->getMessage(), $e->getCode());
         } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());
@@ -90,7 +91,7 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(AccountRequest $request, $id) :JsonResponse
+    public function update(AccountRequest $request, int $id) :JsonResponse
     {
         try {
             $account = $this->accountService->fillEntity($request->all());
@@ -109,19 +110,19 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id) :JsonResponse
+    public function destroy(int $id) :JsonResponse
     {
         try {
             $account = $this->accountService->find($id);
 
             if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException("Conta não encontrada", Response::HTTP_NOT_FOUND);
             }
 
             $this->accountService->delete($id);
 
             return new JsonResponse("Recurso deletado com sucesso", Response::HTTP_OK);
-        } catch(ModelNotFoundException $e){
+        } catch(AccountNotFoundException $e){
             return new JsonResponse($e->getMessage(), $e->getCode());
         } catch (Exception $e) {
             return new JsonResponse($e->getMessage(), $e->getCode());

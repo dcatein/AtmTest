@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Repository\CustomerRepository;
 use App\Models\Customer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class CustomerService {
 
@@ -26,9 +28,19 @@ class CustomerService {
      * @return Customer
      */
     public function create(Customer $entity) :Customer
-    {   
-        $customer = $this->customerRepository->create($entity);
-        return $customer;
+    {
+        try {
+            DB::beginTransaction();
+
+            $customer = $this->customerRepository->create($entity);
+
+            DB::commit();
+            return $customer;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }   
+        
     }
 
     /**
@@ -59,7 +71,15 @@ class CustomerService {
      */
     public function update(Customer $data, $id) :Customer
     {
-        return $this->customerRepository->update($data, $id);
+        try {
+            DB::beginTransaction();
+            $customer = $this->customerRepository->update($data, $id);
+            DB::commit();
+            return $customer;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }   
     }
 
     /**
@@ -69,7 +89,13 @@ class CustomerService {
      */
     public function delete(Int $id) :void
     {
-       $this->customerRepository->delete($id);
+        try {
+            DB::beginTransaction();
+            $this->customerRepository->delete($id);
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
      /**

@@ -1,10 +1,10 @@
 .PHONY: up create-db run install env
 up:
-	docker-compose up -d laravel.test db redis mailhog
+	./vendor/bin/sail up -d laravel.test db redis mailhog
 create-db:
  	./vendor/bin/sail artisan migrate:fresh
 install:
-	docker-compose up -d composer
+	docker-compose up composer
 env:
 	cp .env.example .env
 test:

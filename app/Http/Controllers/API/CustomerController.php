@@ -60,7 +60,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return Customer
      */
-    public function show($id) :Customer
+    public function show(int $id) :Customer
     {
         return $this->customerService->find($id);
     }
@@ -72,7 +72,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function update(CustomerRequest $request, $id) :JsonResponse
+    public function update(CustomerRequest $request, int $id) :JsonResponse
     {
         try {
             $customer = $this->customerService->fillEntity($request->all());
@@ -91,7 +91,7 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function destroy($id) :JsonResponse
+    public function destroy(int $id) :JsonResponse
     {
         try {
             $this->customerService->delete($id);

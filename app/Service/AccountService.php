@@ -8,8 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Account;
 use App\Service\CustomerService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\AccountNotFoundException;
+use App\Exceptions\CostumerNotFoundException;
 
 class AccountService {
     
@@ -45,13 +46,13 @@ class AccountService {
             $customer = $this->customerService->find($entity->customer_id);
 
             if(!$customer){
-                throw new ModelNotFoundException("Customer_id não encontrado, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+                throw new CostumerNotFoundException("Customer_id não encontrado, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
             }
 
             DB::commit();
 
             return $this->accountRepository->create($entity);
-        } catch (ModelNotFoundException $e) {
+        } catch (CostumerNotFoundException $e) {
             DB::rollBack();
             throw $e;
         } catch (Exception $e) {
@@ -105,13 +106,16 @@ class AccountService {
             $account = $this->accountRepository->find($id);
 
             if(!$account){
-                throw new ModelNotFoundException("Conta não encontrada, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
+                throw new AccountNotFoundException("Conta não encontrada, verifique se este cliente está cadastrado.", Response::HTTP_NOT_FOUND);
             }
 
             $account = $this->accountRepository->update($data, $id);
             DB::commit();
 
             return $account;
+        } catch (AccountNotFoundException $e) {
+            DB::rollBack();
+            throw $e;
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
